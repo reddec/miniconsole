@@ -106,11 +106,13 @@ func (srv *server) listObjects(gctx *gin.Context) {
 		Prefix string `form:"prefix"`
 	}
 
-	request.Prefix = "/"
-
 	if err := gctx.Bind(&request); err != nil {
 		gctx.AbortWithError(http.StatusBadRequest, err)
 		return
+	}
+
+	if !strings.HasSuffix(request.Prefix, "/") {
+		request.Prefix += "/"
 	}
 
 	type responseType struct {
