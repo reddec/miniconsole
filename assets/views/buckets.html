@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/water.css">
+    <title>List buckets</title>
+</head>
+<body>
+<h1>Buckets</h1>
+<div>
+    <h2>Create new bucket</h2>
+    <form method="POST" action="buckets" style="display: flex; flex-wrap: wrap">
+        <input type="text" placeholder="bucket name" name="bucket"/>
+        <button type="submit">create new bucket</button>
+    </form>
+</div>
+{{if .Buckets}}
+<table>
+    <thead>
+    <tr>
+        <th>Bucket name</th>
+        <th>Creation time</th>
+    </tr>
+    </thead>
+    {{range $bucket := .Buckets}}
+    <tr>
+        <td>
+            <a href="objects?bucket={{$bucket.Name}}">{{$bucket.Name}}</a>
+        </td>
+        <td>{{$bucket.CreationDate}}</td>
+    </tr>
+    {{end}}
+</table>
+{{else}}
+<p>no buckets</p>
+{{end}}
+</body>
+</html>

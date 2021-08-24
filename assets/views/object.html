@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../static/css/water.css">
+    <title>Object info</title>
+</head>
+<body>
+<h1><a href="../objects?bucket={{.BucketName}}">{{.BucketName}}</a></h1>
+<h2>{{.Object.Key}}</h2>
+
+<div style="display: flex; justify-content: space-between">
+    <form method="get" action="../object/raw">
+        <input type="hidden" name="bucket" value="{{$.BucketName}}"/>
+        <input type="hidden" name="objectID" value="{{$.ObjectID}}"/>
+        <button type="submit">download</button>
+    </form>
+    <form method="POST" action="../object/trash">
+        <input type="hidden" name="bucket" value="{{$.BucketName}}"/>
+        <input type="hidden" name="objectID" value="{{$.ObjectID}}"/>
+        <button type="submit">remove</button>
+    </form>
+</div>
+
+
+
+<ul>
+    <li><b>Size:</b> {{.Object.Size}}</li>
+    {{- if .Object.ContentType}}
+    <li><b>Content type:</b> {{.Object.ContentType}}</li>
+    {{- end}}
+    {{- if not .Object.Expires.IsZero}}
+    <li><b>Expires:</b> {{.Object.Expires}}</li>
+    {{- end}}
+    {{- if .Object.Owner.ID}}
+    <li>Owned by {{.Object.Owner.DisplayName}}(#{{.Object.Owner.ID}})</li>
+    {{- end}}
+    {{- if .Object.StorageClass}}
+    <li><b>Storage class:</b> {{.Object.StorageClass}}</li>
+    {{- end}}
+</ul>
+
+{{if .Object.UserTags}}
+<h3>Tags</h3>
+<table>
+    <thead>
+    <tr>
+        <th>Key</th>
+        <th>Value</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{range $key, $value := .Object.UserTags}}
+    <tr>
+        <td>{{$key}}</td>
+        <td>{{$value}}</td>
+    </tr>
+    {{end}}
+    </tbody>
+</table>
+{{end}}
+
+{{if .Object.Metadata}}
+<h3>Metadata</h3>
+<table>
+    <thead>
+    <tr>
+        <th>Key</th>
+        <th>Value</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{range $key, $values := .Object.Metadata}}
+    <tr>
+        <td>{{$key}}</td>
+        <td>
+            {{- if gt (len $values) 1}}
+            <ul>
+                {{- range $value := $values}}
+                <li>{{$value}}</li>
+                {{- end}}
+            </ul>
+            {{- else}}
+            {{index $values 0}}
+            {{- end}}
+        </td>
+    </tr>
+    {{end}}
+    </tbody>
+</table>
+{{end}}
+
+
+{{if .Object.UserMetadata}}
+<h3>User metadata</h3>
+<table>
+    <thead>
+    <tr>
+        <th>Key</th>
+        <th>Value</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{range $key, $value := .Object.UserMetadata}}
+    <tr>
+        <td>{{$key}}</td>
+        <td>{{$value}}</td>
+    </tr>
+    {{end}}
+    </tbody>
+</table>
+{{end}}
+
+
+</body>
+</html>

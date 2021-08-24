@@ -1,0 +1,11 @@
+version: '3'
+services:
+  minio:
+    image: minio/minio
+    command:
+      - server
+      - /data
+  ui:
+    build: .
+    ports:
+      - '9001:9001'

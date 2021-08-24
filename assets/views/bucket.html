@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/water.css">
+    <title>List objects</title>
+</head>
+<body>
+<h1><a href="?bucket={{.BucketName}}">{{.BucketName}}</a>
+    {{- if .Dirs -}}
+    :
+    {{- end -}}
+    {{- range .Dirs -}}
+    <a href="?bucket={{$.BucketName}}&prefix={{.Prefix}}">{{.Name}}</a>
+    {{- end -}}
+</h1>
+<nav>
+    <a href="..">← all buckets</a>
+</nav>
+<div>
+    <h3>Upload file as object</h3>
+    <form method="POST" enctype="multipart/form-data" style="display: flex; flex-wrap: wrap">
+        <input type="hidden" name="bucket" value="{{.BucketName}}"/>
+        <input type="file" name="content" placeholder="file"/>
+        <input type="text" name="prefix" value="{{.Prefix}}" placeholder="prefix"/>
+        <button type="submit">upload</button>
+    </form>
+</div>
+{{if or .Objects .Prefixes}}
+<h3>Objects</h3>
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Size</th>
+        <th>Modified</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    {{range $object := .Prefixes}}
+    <tr>
+        <td>
+            <a href="?bucket={{$.BucketName}}&prefix={{$object.Key}}">🗀 {{$object.Key}}</a>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    {{end}}
+    {{range $object := .Objects}}
+    <tr>
+        <td>
+            <a href="object?bucket={{$.BucketName}}&objectID={{$object.Key}}">🗍 {{$object.Key}}</a>
+        </td>
+        <td>
+            {{$object.Size}}
+        </td>
+        <td>{{$object.LastModified}}</td>
+        <td style="display: flex">
+            <form method="get" action="object/raw">
+                <input type="hidden" name="bucket" value="{{$.BucketName}}"/>
+                <input type="hidden" name="objectID" value="{{$object.Key}}"/>
+                <button type="submit">💾</button>
+            </form>
+            <form method="POST" action="object/trash">
+                <input type="hidden" name="bucket" value="{{$.BucketName}}"/>
+                <input type="hidden" name="objectID" value="{{$object.Key}}"/>
+                <button type="submit">🗑</button>
+            </form>
+        </td>
+    </tr>
+    {{end}}
+</table>
+{{else}}
+<p>no objects</p>
+{{end}}
+</body>
+</html>
