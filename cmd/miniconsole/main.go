@@ -241,7 +241,16 @@ func (srv *server) removeBucket(gctx *gin.Context) {
 		return
 	}
 
-	if err := srv.mc.RemoveBucket(gctx.Request.Context(), request.Bucket); err != nil {
+	ctx, cancel := context.WithCancel(gctx.Request.Context())
+	defer cancel()
+
+	ch := srv.mc.ListObjects(ctx, request.Bucket, minio.ListObjectsOptions{Recursive: true})
+	for err := range srv.mc.RemoveObjects(ctx, request.Bucket, ch, minio.RemoveObjectsOptions{}) {
+		gctx.AbortWithError(http.StatusBadGateway, err.Err)
+		return
+	}
+
+	if err := srv.mc.RemoveBucket(ctx, request.Bucket); err != nil {
 		gctx.AbortWithError(http.StatusBadGateway, err)
 		return
 	}
