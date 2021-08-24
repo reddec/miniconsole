@@ -57,3 +57,9 @@ Run:
 - `./miniconsole --help`
 
 > Default values for configuration could be different from in docker.
+
+## Screenshots
+
+![Screenshot_20210825_014546](https://user-images.githubusercontent.com/6597086/130664738-b09ab1af-c604-47b0-9d41-5eeb4eba3008.png)
+![Screenshot_20210825_014606](https://user-images.githubusercontent.com/6597086/130664745-9399b6ac-5769-436f-9e6a-4f254d1e6588.png)
+![Screenshot_20210825_014623](https://user-images.githubusercontent.com/6597086/130664746-d968059a-f8d0-44ad-b4de-f344c7763138.png)
