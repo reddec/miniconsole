@@ -226,7 +226,8 @@ func (srv *server) createBucket(gctx *gin.Context) {
 		return
 	}
 
-	gctx.Redirect(http.StatusSeeOther, "objects?bucket="+url.PathEscape(request.Bucket))
+	gctx.Header("Location", "objects?bucket="+url.PathEscape(request.Bucket))
+	gctx.Status(http.StatusSeeOther)
 }
 
 // POST /buckets/<bucket>/trash
@@ -235,7 +236,7 @@ func (srv *server) removeBucket(gctx *gin.Context) {
 		Bucket string `form:"bucket"`
 	}
 
-	if err := gctx.BindUri(&request); err != nil {
+	if err := gctx.Bind(&request); err != nil {
 		gctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
@@ -245,7 +246,8 @@ func (srv *server) removeBucket(gctx *gin.Context) {
 		return
 	}
 
-	gctx.Redirect(http.StatusSeeOther, "../..")
+	gctx.Header("Location", "../")
+	gctx.Status(http.StatusSeeOther)
 }
 
 // POST /objects/trash/<bucket>/<objectID*>
@@ -267,7 +269,8 @@ func (srv *server) removeObject(gctx *gin.Context) {
 
 	b := url.QueryEscape(request.Bucket)
 	dir := dirname(request.ObjectID)
-	gctx.Redirect(http.StatusSeeOther, "../objects?bucket="+b+"&prefix="+url.QueryEscape(dir))
+	gctx.Header("Location", "../objects?bucket="+b+"&prefix="+url.QueryEscape(dir))
+	gctx.Status(http.StatusSeeOther)
 }
 
 func (srv *server) uploadFile(gctx *gin.Context) {
@@ -306,8 +309,8 @@ func (srv *server) uploadFile(gctx *gin.Context) {
 		return
 	}
 
-	gctx.Redirect(http.StatusSeeOther, "objects?bucket="+url.QueryEscape(request.Bucket)+"&prefix="+url.QueryEscape(request.Prefix))
-
+	gctx.Header("Location", "./objects?bucket="+url.QueryEscape(request.Bucket)+"&prefix="+url.QueryEscape(request.Prefix))
+	gctx.Status(http.StatusSeeOther)
 }
 
 func dirname(objectPath string) string {

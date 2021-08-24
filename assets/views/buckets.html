@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/water.css">
+    <link rel="stylesheet" href="static/css/water.css">
     <title>List buckets</title>
 </head>
 <body>
@@ -17,23 +17,29 @@
 </div>
 {{if .Buckets}}
 <table>
-    <thead>
-    <tr>
-        <th>Bucket name</th>
-        <th>Creation time</th>
-    </tr>
-    </thead>
     {{range $bucket := .Buckets}}
     <tr>
         <td>
-            <a href="objects?bucket={{$bucket.Name}}">{{$bucket.Name}}</a>
+            <div>
+                <a href="objects?bucket={{$bucket.Name}}">{{$bucket.Name}}</a><br/>
+                <small>{{$bucket.CreationDate}}</small>
+            </div>
+            <form method="POST" action="buckets/trash">
+                <input type="hidden" name="bucket" value="{{$bucket.Name}}"/>
+                <button type="submit">🗑</button>
+            </form>
         </td>
-        <td>{{$bucket.CreationDate}}</td>
     </tr>
     {{end}}
 </table>
 {{else}}
 <p>no buckets</p>
 {{end}}
+<style>
+    td {
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
 </body>
 </html>

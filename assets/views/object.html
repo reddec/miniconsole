@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../static/css/water.css">
+    <link rel="stylesheet" href="static/css/water.css">
     <title>Object info</title>
 </head>
 <body>
-<h1><a href="../objects?bucket={{.BucketName}}">{{.BucketName}}</a></h1>
+<h1><a href="objects?bucket={{.BucketName}}">{{.BucketName}}</a></h1>
 <h2>{{.Object.Key}}</h2>
 
 <div style="display: flex; justify-content: space-between">
-    <form method="get" action="../object/raw">
+    <form method="get" action="object/raw">
         <input type="hidden" name="bucket" value="{{$.BucketName}}"/>
         <input type="hidden" name="objectID" value="{{$.ObjectID}}"/>
         <button type="submit">download</button>
     </form>
-    <form method="POST" action="../object/trash">
+    <form method="POST" action="object/trash">
         <input type="hidden" name="bucket" value="{{$.BucketName}}"/>
         <input type="hidden" name="objectID" value="{{$.ObjectID}}"/>
         <button type="submit">remove</button>
