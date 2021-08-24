@@ -1,0 +1,46 @@
+project_name: miniconsole
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    flags:
+      - -trimpath
+    main: ./cmd/miniconsole
+dockers:
+  - dockerfile: Dockerfile.release
+    image_templates:
+      - "ghcr.io/reddec/{{ .ProjectName }}:{{ .Tag }}"
+      - "ghcr.io/reddec/{{ .ProjectName }}:v{{ .Major }}"
+      - "ghcr.io/reddec/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}"
+      - "ghcr.io/reddec/{{ .ProjectName }}:latest"
+    build_flag_templates:
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+archives:
+  - files:
+      - LICENSE
+      - README.md
+    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ incpatch .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^doc:'
+      - '^test:'
+      - '^build:'

@@ -17,7 +17,7 @@ Features:
 
 **Docker** installation designed to be primary. Image runs under unprivileged user.
 
-Image: `reddec/miniconsole`
+Image: `ghcr.io/reddec/miniconsole`
 
 Example compose file
 
@@ -30,7 +30,7 @@ services:
       - server
       - /data
   ui:
-    image: reddec/miniconsole
+    image: ghcr.io/reddec/miniconsole
     ports:
       - '9001:9001'
 ```
